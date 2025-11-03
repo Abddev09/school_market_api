@@ -5,7 +5,7 @@ from django.conf import settings
 from drf_yasg.views import get_schema_view
 from drf_yasg import openapi
 from rest_framework import permissions
-
+from django.http import HttpResponse
 schema_view = get_schema_view(
     openapi.Info(
         title="School API",
@@ -19,8 +19,25 @@ schema_view = get_schema_view(
     permission_classes=(permissions.AllowAny,),
 )
 
+
+def home(request):
+    html_content = """
+    <html>
+      <head><title>255-Maktab API</title></head>
+      <body>
+      <mosquee>
+          <h1>🕌 API ishlayapti 🚀</h1>
+      </mosquee>
+      </body>
+    </html>
+    """
+    return HttpResponse(html_content)
+
+
+
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('',home),
     path('api/', include("user.urls")),
     path('api/',include("school.urls")),
     path('api/',include("market.urls")),
