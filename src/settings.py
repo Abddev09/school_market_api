@@ -31,9 +31,7 @@ SECRET_KEY = str(os.getenv("SECRET_KEY",0))
 DEBUG = bool(os.getenv("DEBUG",1))
 
 ALLOWED_HOSTS = [
-    'localhost',
-    '127.0.0.1',
-    'school-market-api.onrender.com',
+    '*'
 ]
 
 
