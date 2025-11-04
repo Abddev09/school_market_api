@@ -38,14 +38,12 @@ ALLOWED_HOSTS = [
 # Application definition
 
 INSTALLED_APPS = [
-    'cloudinary_storage',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'cloudinary',
     'user',
     'school',
     'market',
@@ -100,13 +98,7 @@ SIMPLE_JWT = {
     "UPDATE_LAST_LOGIN": False,
 }
 
-CLOUDINARY_STORAGE = {
-    'CLOUD_NAME': os.getenv('CLOUDINARY_CLOUD_NAME', 'mycloud123'),
-    'API_KEY': os.getenv('CLOUDINARY_API_KEY', '123456789012345'),
-    'API_SECRET': os.getenv('CLOUDINARY_API_SECRET', 'AbCDefGhijkLmnopQRsT')
-}
 
-DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
 
 
 REST_FRAMEWORK = {
@@ -165,9 +157,14 @@ USE_TZ = False
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.2/howto/static-files/
-DATA_UPLOAD_MAX_MEMORY_SIZE = 2 * 1024 * 1024  # 2 MB
+
+DEFAULT_FILE_STORAGE = 'django.core.files.storage.FileSystemStorage'
+
+
 
 STATIC_URL = 'static/'
+STATIC_ROOT = BASE_DIR / "static_root/"
+STATICFILES_DIRS = [BASE_DIR / "static"]
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
 # Default primary key field type
