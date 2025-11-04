@@ -174,10 +174,16 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 
 CORS_ALLOWED_ORIGINS = [
+    "https://school-market-api.onrender.com",
     "http://localhost:5173",
     "http://127.0.0.1:5173",
-    "https://school-market-api.onrender.com",
     "https://255school.netlify.app"
 ]
+
+CSRF_TRUSTED_ORIGINS = [
+    "https://school-market-api.onrender.com",
+    "http://127.0.0.1:8000",  # local test uchun
+]
+
 
 CORS_ALLOW_CREDENTIALS = True
