@@ -26,7 +26,7 @@ def home(request):
       <head><title>255-Maktab API</title></head>
       <body>
       <mosquee>
-          <h1>🕌 API ishlayapti 🚀</h1>
+          <h1>API ishlayapti 🚀</h1>
       </mosquee>
       </body>
     </html>
