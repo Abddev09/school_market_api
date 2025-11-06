@@ -53,6 +53,9 @@ class CustomUserManager(BaseUserManager):
         extra_fields.setdefault("is_superuser", True)
         return self.create_user(password, **extra_fields)
 
+    def sudents(self):
+        self.get_queryset().filter(role=3)
+
 
 class User(AbstractBaseUser, PermissionsMixin):
     first_name = models.CharField(max_length=255, null=True)
@@ -111,4 +114,15 @@ class User(AbstractBaseUser, PermissionsMixin):
 
     def __str__(self):
         return self.username or self.full_name()
+
+
+    def response(self):
+        return {
+
+        }
+
+
+class ClassStudent(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='user_classes')
+    classe = models.ForeignKey(Classe, on_delete=models.CASCADE, related_name='class_users')
 

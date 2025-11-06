@@ -6,6 +6,7 @@ from datetime import datetime
 import pandas as pd
 from django.conf import settings
 from django.db import transaction
+from django.db.models import Q
 from openpyxl import load_workbook
 from openpyxl.styles import Alignment, PatternFill, Font, Side, Border
 from openpyxl.utils import get_column_letter
@@ -67,18 +68,17 @@ class TeacherView(GenericAPIView):
         current_teacher = request.user
 
         # O'qituvchining sinfini topamiz
-        classe = Classe.objects.filter(teacher=current_teacher).first()
-        if not classe:
-            return Response({"detail": "Sizga birorta sinf biriktirilmagan."}, status=404)
+        # classe = Classe.objects.filter(teacher=current_teacher).first()
+        # if not classe:
+        #     return Response({"detail": "Sizga birorta sinf biriktirilmagan."}, status=404)
 
         # Shu sinfdagi o'quvchilarni olamiz
-        students = User.objects.filter(classe=classe)
+        students = User.objects.sudents.filter(Q(classe__teacher=request.User))
 
-        # ✅ E'tibor: bu yerda many=True bo'lishi shart!
         serializer = self.get_serializer(students, many=True)
-        classe_seri = ClassSerializer(classe)
+        # classe_seri = ClassSerializer(classe)
         return Response({
-            "classe": classe_seri.data,
+            # "classe": classe_seri.data,
             "students": serializer.data
         })
 
