@@ -62,7 +62,6 @@ class User(AbstractBaseUser, PermissionsMixin):
     last_name = models.CharField(max_length=255, null=True)
     username = models.CharField(max_length=255, unique=True, editable=False)
     ball = models.PositiveIntegerField(default=0)
-    avatar = models.ImageField(max_length=255, null=True, upload_to='avatar')
     gender = models.BooleanField(default=True, choices=[
         (True, "Erkak 👨‍"),
         (False, "Ayol 🙍‍"),
@@ -122,7 +121,4 @@ class User(AbstractBaseUser, PermissionsMixin):
         }
 
 
-class ClassStudent(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='user_classes')
-    classe = models.ForeignKey(Classe, on_delete=models.CASCADE, related_name='class_users')
 

@@ -2,6 +2,13 @@ import os
 import random
 import string
 from datetime import datetime
+from methodism.helper import dictfetchall, dictfetchone 
+
+
+from contextlib import closing
+
+from django.db import connection
+
 
 import pandas as pd
 from django.conf import settings
@@ -72,15 +79,32 @@ class TeacherView(GenericAPIView):
         # if not classe:
         #     return Response({"detail": "Sizga birorta sinf biriktirilmagan."}, status=404)
 
-        # Shu sinfdagi o'quvchilarni olamiz
-        students = User.objects.sudents.filter(Q(classe__teacher=request.User))
+        # # Shu sinfdagi o'quvchilarni olamiz
+        # students = User.objects.sudents.filter(Q(classe__teacher=request.User))
 
-        serializer = self.get_serializer(students, many=True)
+        # serializer = self.get_serializer(students, many=True)
         # classe_seri = ClassSerializer(classe)
-        return Response({
-            # "classe": classe_seri.data,
-            "students": serializer.data
-        })
+        with closing(connection.cursor()) as cursor:
+            sql = f"""
+            SELECT 
+        uu.id AS student_id,
+        uu.first_name,
+        uu.last_name,
+        uu.username,
+        uu.gender,
+        uu.classe_id,
+        uu.ball,
+        cls.id AS classe_id,
+        cls.name AS classe_name,
+        cls.teacher_id
+    FROM user_user AS uu
+    INNER JOIN school_classe AS cls ON cls.id = uu.classe_id
+    WHERE uu.role = 3 AND cls.teacher_id = {request.user.id}
+            """
+            cursor.execute(sql)
+            result = dictfetchall(cursor)
+
+        return Response(result)
 
 # ------------------- IMPORT STUDENT + EXEL FILE -----------------
 class ImportStudents(GenericAPIView):

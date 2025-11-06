@@ -17,5 +17,4 @@ class Grade(models.Model):
             self.student.ball += self.ball
             self.student.save()
 
-    def __str__(self):
-        return f"{self.student.first_name} - {self.ball}"
+   
