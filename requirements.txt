@@ -12,6 +12,7 @@ drf-yasg==1.21.11
 et_xmlfile==2.0.0
 idna==3.11
 inflection==0.5.1
+methodism==0.3.5
 numpy==2.3.4
 openpyxl==3.1.5
 packaging==25.0
