@@ -12,7 +12,7 @@ def random_id():
 
 class Order(models.Model):
     student = models.ForeignKey('user.User',on_delete=models.CASCADE,related_name="orders")
-    product = models.ForeignKey('market.Product',on_delete=models.SET_NULL,null=True,related_name="orders")
+    product = models.ForeignKey('market.Product',on_delete=models.DO_NOTHING,null=True,related_name="orders")
     date = models.DateTimeField(auto_now_add=True)
     receipt_date = models.DateTimeField(default=default_receipt_date)
     code = models.CharField(default=random_id)
