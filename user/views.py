@@ -73,17 +73,6 @@ class TeacherView(GenericAPIView):
 
     def get(self, request):
         current_teacher = request.user
-
-        # O'qituvchining sinfini topamiz
-        # classe = Classe.objects.filter(teacher=current_teacher).first()
-        # if not classe:
-        #     return Response({"detail": "Sizga birorta sinf biriktirilmagan."}, status=404)
-
-        # # Shu sinfdagi o'quvchilarni olamiz
-        # students = User.objects.sudents.filter(Q(classe__teacher=request.User))
-
-        # serializer = self.get_serializer(students, many=True)
-        # classe_seri = ClassSerializer(classe)
         with closing(connection.cursor()) as cursor:
             sql = f"""
             SELECT 
