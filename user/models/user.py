@@ -32,15 +32,18 @@ class CustomUserManager(BaseUserManager):
             if username and not self.model.objects.filter(username=username).exists():
                 return username
 
-    def create_user(self, password=None, **extra_fields):
+    def create_user(self,username, password=None, **extra_fields):
         first_name = extra_fields.get("first_name", "")
         last_name = extra_fields.get("last_name", "")
 
         if not first_name:
             raise ValueError("Foydalanuvchi uchun first_name kiritilishi shart!")
 
-        username = self.generate_unique_username(first_name, last_name)
-        extra_fields["username"] = username
+        if not username:
+            username = self.generate_unique_username(first_name, last_name)
+            extra_fields["username"] = username
+        else:
+            extra_fields["username"] = username
 
         user = self.model(**extra_fields)
         if password:
