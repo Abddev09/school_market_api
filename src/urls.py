@@ -6,6 +6,7 @@ from drf_yasg.views import get_schema_view
 from drf_yasg import openapi
 from rest_framework import permissions
 from django.http import HttpResponse
+
 schema_view = get_schema_view(
     openapi.Info(
         title="School API",
@@ -33,6 +34,12 @@ def home(request):
     """
     return HttpResponse(html_content)
 
+
+
+handler404 = "user.errors.custom_404"
+handler403 = "user.errors.custom_403"
+handler400 = "user.errors.custom_400"
+handler500 = "user.errors.custom_500"
 
 
 urlpatterns = [
