@@ -1,5 +1,5 @@
 from django.db import models
-
+import os
 
 class Product(models.Model):
     name = models.CharField(max_length=100)
@@ -13,6 +13,12 @@ class Product(models.Model):
     def delete(self, *args, **kwargs):
         self.is_active = False
         self.save()
+
+    def hard_delete(self, *args, **kwargs):
+        if self.image:
+            if os.path.isfile(self.image.path):
+                os.remove(self.image.path)
+        super(Product, self).delete(*args, **kwargs)
 
     def __str__(self):
         return self.name

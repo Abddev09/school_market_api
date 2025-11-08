@@ -41,10 +41,10 @@ class CustomUserManager(BaseUserManager):
 
         if not username:
             username = self.generate_unique_username(first_name, last_name)
-            extra_fields["username"] = username
         else:
             extra_fields["username"] = username
 
+        
         user = self.model(**extra_fields)
         if password:
             user.set_password(password)
