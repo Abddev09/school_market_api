@@ -126,21 +126,24 @@ class ImportStudents(GenericAPIView):
                 first_name = str(row.get('first_name', '')).strip()
                 last_name = str(row.get('last_name', '')).strip()
                 gender = row.get('gender', True)
-                classe = row.get('classe',None)
                 password = str(row.get('password', '123456')).strip()  # default password
 
-                classe, _ = Classe.objects.get_or_create(name=classe)
+                classe_name = row.get('classe', None)
 
-                if not first_name:
-                    continue  # ism bo‘lmasa o‘tkazib yuboramiz
+                if classe_name:
+                    classe_obj, _ = Classe.objects.get_or_create(name=classe_name)
+                    classe_obj.teacher = current_user
+                    classe_obj.save()
+                else:
+                    classe_obj = None  # Agar faylda sinf ko‘rsatilmagan bo‘lsa
 
-                # --- Student yaratish ---
+ 
                 user = User.objects.create_user(
                     first_name=first_name,
                     last_name=last_name,
                     gender=gender,
-                    classe=classe,
-                    role=3,              # har doim student
+                    classe=classe_obj,
+                    role=3,              
                     is_staff=False,
                     password=password
                 )
