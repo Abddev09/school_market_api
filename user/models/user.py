@@ -93,18 +93,28 @@ class User(AbstractBaseUser, PermissionsMixin):
     REQUIRED_FIELDS = ['first_name', 'last_name', 'role']
 
     def save(self, *args, **kwargs):
-        # 1) Agar username bo'lmasa — modelga bog'langan manager orqali generatsiya qilamiz
-        if not self.username:
-            # self.__class__.objects — bu modelga bog'langan manager
-            username = self.__class__.objects.generate_unique_username(
-                (self.first_name or "user"),
-                (self.last_name or "")
-            )
-            self.username = username
-
-        # 2) Passwordni hash qilamiz agar u raw string bo'lsa
+        # 1) Passwordni hash qilamiz agar u raw string bo'lsa
         if self.password and not self.password.startswith('pbkdf2_'):
             self.password = make_password(self.password)
+
+        # 2) Student bo'lsa va username "pattern"larga tushmasa, generatsiya qilamiz
+        if getattr(self, "role", None) == 3:
+            first_name = (self.first_name or "").strip().lower()
+            last_name = (self.last_name or "").strip().lower()
+
+            # patternlarni tekshirish
+            patterns = [
+                f"{first_name}{last_name}",
+                f"{first_name}.{last_name}",
+                f"{first_name}{last_name[0]}" if last_name else first_name,
+                f"{first_name[0]}.{last_name}" if first_name else last_name,
+                f"{first_name}.{last_name[0]}" if last_name else first_name,
+            ]
+
+            # Agar username mavjud bo'lsa va patternlarga tushsa, o'zgartirmaymiz
+            username_matches_pattern = any(self.username and self.username.startswith(p) for p in patterns)
+            if not self.username or not username_matches_pattern:
+                self.username = self.__class__.objects.generate_unique_username(first_name, last_name)
 
         super().save(*args, **kwargs)
 
