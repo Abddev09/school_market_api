@@ -8,3 +8,4 @@ from user.models import User
 class UserAdmin(admin.ModelAdmin):
     list_display = ["username","first_name","last_name","is_staff","is_superuser","role"]
     list_filter = ["role", "is_staff"]
+    search_fields = ["username", "first_name", "last_name"]
