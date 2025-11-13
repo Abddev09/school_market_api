@@ -66,6 +66,18 @@ class UserViews(ModelViewSet):
     permission_classes = [IsAuthenticated]
 
 
+class StudentUserViews(GenericAPIView):
+    queryset = User.objects.all()
+    serializer_class = UserSerializer
+    permission_classes = [IsAuthenticated]
+    pagination_class = None
+
+    def get(self, request, *args, **kwargs):
+        students = User.objects.filter(role=3).order_by('-ball')
+        serializer = self.get_serializer(students, many=True)
+        return Response(serializer.data)
+
+
 class TeacherView(GenericAPIView):
     permission_classes = [IsAuthenticated]
     serializer_class = UserSerializer

@@ -109,7 +109,7 @@ REST_FRAMEWORK = {
         'rest_framework_simplejwt.authentication.JWTAuthentication',
     ],
     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
-    'PAGE_SIZE': 40,  # har bir sahifada 40 ta obyekt
+    'PAGE_SIZE': 40,
 }
 
 # Database

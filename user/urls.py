@@ -5,7 +5,8 @@ from .views import (
     UserViews,
     ImportStudents,
     ChangePasswordView,
-    TeacherView
+    TeacherView,
+    StudentUserViews
 )
 
 # 🔹 Router faqat ModelViewSet uchun
@@ -18,6 +19,7 @@ urlpatterns = [
     path('students/import/', ImportStudents.as_view(), name='import-students'),
     path('reset-password/', ChangePasswordView.as_view(), name='user-reset-password'),
     path("my-students/",TeacherView.as_view(),name="my-students"),
+    path("student/users/",StudentUserViews.as_view(), name="student-users"),
     # router url-larni qo‘shamiz
     path('', include(router.urls)),
 ]
