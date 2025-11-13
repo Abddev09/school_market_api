@@ -17,6 +17,7 @@ class ProductView(ModelViewSet):
     authentication_classes = [JWTAuthentication]
     queryset = Product.objects.all()
     serializer_class = ProductSerializer
+    pagination_class = None
 
 
 

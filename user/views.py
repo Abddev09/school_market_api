@@ -1,7 +1,6 @@
 import os
 import random
 import string
-from datetime import datetime
 from methodism.helper import dictfetchall, dictfetchone 
 
 
@@ -11,14 +10,10 @@ from django.db import connection
 
 
 import pandas as pd
-from django.conf import settings
-from django.db import transaction
-from django.db.models import Q
-from openpyxl import load_workbook
-from openpyxl.styles import Alignment, PatternFill, Font, Side, Border
-from openpyxl.utils import get_column_letter
 
-from rest_framework.generics import GenericAPIView, ListCreateAPIView
+from openpyxl.utils import get_column_letter
+from rest_framework.pagination import PageNumberPagination
+from rest_framework.generics import GenericAPIView
 from rest_framework.parsers import MultiPartParser, FormParser
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework.response import Response
@@ -28,7 +23,6 @@ from rest_framework_simplejwt.tokens import RefreshToken
 from django.contrib.auth import authenticate
 
 from school.models import Classe
-from school.serializers import ClassSerializer
 from user.models import User
 from user.serializer import UserSerializer
 from utils.c_response import custom_response
@@ -74,6 +68,52 @@ class StudentUserViews(GenericAPIView):
 
     def get(self, request, *args, **kwargs):
         students = User.objects.filter(role=3).order_by('-ball')
+        serializer = self.get_serializer(students, many=True)
+        return Response(serializer.data)
+    
+
+class StudentPagination(PageNumberPagination):
+    page_size = 40
+    page_size_query_param = 'page_size'  # optional, foydalanuvchi o'zgartirishi mumkin
+    max_page_size = 100
+
+class StudentUserViewss(GenericAPIView):
+    queryset = User.objects.all()
+    serializer_class = UserSerializer
+    permission_classes = [IsAuthenticated]
+    pagination_class = StudentPagination
+
+    def get(self, request, *args, **kwargs):
+        class_id = request.query_params.get("class_id", None)  # query paramdan olish
+        students = User.objects.filter(role=3).order_by('-ball')
+
+        # Agar class_id berilgan bo‘lsa, filter qilish
+        if class_id is not None:
+            try:
+                class_id_int = int(class_id)
+                if class_id_int != 0:
+                    students = students.filter(classe_id=class_id_int)
+            except ValueError:
+                pass
+
+        page = self.paginate_queryset(students)
+        if page is not None:
+            serializer = self.get_serializer(page, many=True)
+            return self.get_paginated_response(serializer.data)
+
+        # Fallback: pagination ishlamasa
+        serializer = self.get_serializer(students, many=True)
+        return Response(serializer.data)
+    
+    
+class TeacherUserViews(GenericAPIView):
+    queryset = User.objects.all()
+    serializer_class = UserSerializer
+    permission_classes = [IsAuthenticated]
+    pagination_class = None
+
+    def get(self, request, *args, **kwargs):
+        students = User.objects.filter(role=2)
         serializer = self.get_serializer(students, many=True)
         return Response(serializer.data)
 
