@@ -5,6 +5,7 @@ from .models import Classe, Grade
 from .serializers import (
     ClassSerializer, GradeSerializer
 )
+from .permission import GradePermission
 
 
 
@@ -27,3 +28,4 @@ class ClassView(ModelViewSet):
 class GradeView(ModelViewSet):
     queryset = Grade.objects.all().select_related("student")
     serializer_class = GradeSerializer
+    permission_classes = [GradePermission]
