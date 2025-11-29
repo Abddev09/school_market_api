@@ -43,7 +43,7 @@ handler500 = "user.errors.custom_500"
 
 
 urlpatterns = [
-    path('admin/', admin.site.urls),
+    path('humo255/dashboard/', admin.site.urls),
     path('',home),
     path('api/', include("user.urls")),
     path('api/',include("school.urls")),
