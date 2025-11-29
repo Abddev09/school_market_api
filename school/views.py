@@ -5,17 +5,17 @@ from .models import Classe, Grade
 from .serializers import (
     ClassSerializer, GradeSerializer
 )
-from .permission import GradePermission
+from .permission import GradePermission, ClassPermission
 
 
 
 
 # --------------------------- Class CRUD ---------------------------
 class ClassView(ModelViewSet):
-    permission_classes = [IsAuthenticated]
+    permission_classes = [ClassPermission]
     queryset = Classe.objects.all()
     serializer_class = ClassSerializer
-
+    
     def perform_create(self, serializer):
         data = self.request.data
         teacher_id = data.get("teacher")
